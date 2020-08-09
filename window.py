@@ -1,30 +1,21 @@
+#file that initializes GUI
+
 from tkinter import *
 from os import path
 import json
 
-class Window():
-    def __init__(self, name, size):
-        self.name = name
-        self.size = size
-        self.window = Tk()
+window = Tk()
+window.title("Database")
+window.geometry("800x800")
 
-    def window(self):
-        return self.window
-
-    def initialize(self):
-        self.window.title("Database")
-        self.window.geometry("800x800")
-
-    def create(self):
-        left_window_init(self.window)
-        right_window_init(self.window)
-        self.window.mainloop()
-
-    
+def window_start():
+    window_init()    #initializes all visual data in database
+    window.mainloop()
 
 #shows all of JSON file
 #TODO: reorganize file
-def left_window_init(window):
+def window_init():
+    #left window init
     left_window = LabelFrame(window, text="File Contents")
     left_window.pack(fill="both", expand="yes", padx=10, pady=10, side=LEFT)
 
@@ -32,18 +23,21 @@ def left_window_init(window):
     json_text.insert(INSERT, check_file())
     json_text.pack()
 
-#shows JSON tags
-#TODO: reorganize file
-def right_window_init(window):
+    #right window init
     right_window = LabelFrame(window, text="Database Tags")
     right_window.pack(fill="both", expand="yes", padx=10, pady=10, side=RIGHT)
 
-    json_tags = Text(right_window)
+    json_tags = Listbox(right_window)
     for itm in get_tags():
-        json_tags.insert(INSERT, (itm + "\n"))
-
+        json_tags.insert(END, itm)
     json_tags.pack()
+    #lambda allows called function to have parameters
+    json_button = Button(right_window, text="Update Database", command=lambda: update_json_text(json_text))
+    json_button.pack()
 
+def update_json_text(json_text):
+    json_text.delete("1.0", END)
+    json_text.insert(END, "test input")
 
 def check_file():
     if not path.exists("data.json"):

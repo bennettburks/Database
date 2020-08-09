@@ -1,11 +1,8 @@
-#main file with intialization 
-from window import Window
-
+#main file
+from window import window_start as window
 
 def main():
-    window = Window("Database", "800x800")
-    window.initialize()
-    window.create()
+    window()
 
 if __name__ == "__main__":
     main()
