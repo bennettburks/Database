@@ -43,26 +43,35 @@ def window_init():
 
 #updates left text box
 def update_text(text, tags):
-    data = file_contents()
-    data = data[tags.get(ACTIVE)]
+    contents = file_contents()
+    data = contents[tags.get(ACTIVE)]
+    print(data)
     text.delete("1.0", END)
     text.insert(END, data)
-    window_data(text, data)
+    window_data(text, data, tags) #TODO: see if tags can be taken out
 
-def window_data(text, data):
+def window_data(text, data, tags):
     for itm in bottomright_window.winfo_children():
             itm.destroy()
     if data_is_collection(data) is True:
-        print(data.keys())
         for itm in data.keys():
-            print(f"{itm} - {data[itm]}")
             text = Label(bottomright_window, text=f"{itm}:")
             text.pack()
-            itm = Entry(bottomright_window)
+            itm = Entry(bottomright_window, name=f"{itm}")
             itm.pack()
-        print(bottomright_window.winfo_children())
-        update = Button(bottomright_window, text="Update Collection")
+        update = Button(bottomright_window, text="Update Collection", command=lambda: update_data(data, tags)) #TODO: see if tags can be taken out
         update.pack()
+
+#updates values in JSON file
+def update_data(data, tags): #TODO: see if tags can be taken out
+    contents = file_contents()
+    print(contents)
+    for itm in data.keys():
+        input = bottomright_window.nametowidget(f"{itm}").get()
+        if(input != ""):
+            print(input)
+            contents[tags.get(ACTIVE)][itm] = input
+    print(contents)
 
 
 #checks if data type has multiple objects
@@ -80,7 +89,6 @@ def check_file():
 
 #returns data file contents (dictionary)
 def file_contents():
-    check_file()
     with open("data.json", "r") as json_file:
         text = json.loads(json_file.read())
         return text
